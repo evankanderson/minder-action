@@ -1,0 +1,57 @@
+# This is derived from https://github.com/mindersec/minder-client-installer/action.yaml
+# It has more functionality, and is under a new name, as it makes some slighly
+# different design decisions.
+name: Load Minder Configuration
+author: custcodian
+description: |
+  This action installs the minder CLI and optionally configures it with server
+  authentication and uses it to install rules, data sources, and profiles from
+  checked-in configuration.
+branding:
+  icon: package
+  color: blue
+inputs:
+  server:
+    description: 'The name of the minder server to use.'
+    required: false
+    default: 'api.custcodian.dev'
+  project:
+    description: 'The Minder project to apply the configuration to. Both `project` and `directory` must be set to load rules from a directory.'
+    required: false
+  directory:
+    description: 'A directory (or file) containing Minder configuration YAML to apply to the server. Both `project` and `directory` must be set to load rules.'
+    required: false
+  release:
+    description: 'The Minder client release to download and use. Defaults to a specific version for each release of the action.'
+    required: false
+    default: '0.0.88'
+runs:
+  using: composite
+  steps:
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3.6.0
+    - name: Install and validate CLI
+      uses: mindersec/minder-client-installer@v1.0.0
+      with:
+        release: ${{ inputs.release }}
+    # TODO: rather than setting $MINDER_TOKEN, build this into the minder CLI
+    # ACTIONS_ID_TOKEN_REQUEST_URL is set by GitHub Actions when the id-token
+    # permission is available.
+    - name: Fetch ID token
+      run: |
+        set -x -e
+          echo $GITHUB_TOKEN
+          URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=minder"
+          curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
+          # Mask the token as a secret, so it won't be printed to the logs
+          echo "::add-mask::$(jq -r .value <.action-token)"
+          echo "MINDER_AUTH_TOKEN=$(jq -r .value <.action-token)" >> "$GITHUB_ENV"
+          rm .action-token
+    - name: Apply Minder ruletypes
+      if: (inputs.project != '' && inputs.directory != '')
+      env:
+        MINDER_GRPC_SERVER_PORT: 443
+        MINDER_GRPC_SERVER_HOST: ${{ inputs.server }}
+        MINDER_PROJECT: ${{ inputs.project }}
+      run: |
+        minder apply -f ${{ inputs.directory }}
