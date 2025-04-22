@@ -10,10 +10,10 @@ Before using this action, you will need to grant the GitHub Action role permissi
 minder project role grant --grpc-host api.custcodian.dev \
   --project 00000000-0000-0000-0000-000000000000 \
   --sub githubactions/repo:myorg/myrepo:ref:refs/heads/main \
-  --role editor
+  --role admin
 ```
 
-The above command grants GitHub actions running from the `main` branch of `myorg/myrepo` **editor** permission on the specified project.  You can get your project ID from `minder auth whoami` if you are logged in to the minder server.
+The above command grants GitHub actions running from the `main` branch of `myorg/myrepo` **admin** permission on the specified project.  ([`admin` is currently required to create or update data sources](https://github.com/mindersec/minder/blob/main/internal/authz/model/minder.fga#L94))  You can get your project ID from `minder auth whoami` if you are logged in to the minder server.
 
 ## Usage
 
