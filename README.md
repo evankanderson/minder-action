@@ -22,6 +22,8 @@ name: Apply Minder Profiles on Update
 on:
   push:
     branches: [ main ]
+    paths:
+    - .github/minderconfig
 
 permissions:
   # id-token: write is needed to fetch a GitHub Actions token for other services

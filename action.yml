@@ -38,6 +38,7 @@ runs:
     # ACTIONS_ID_TOKEN_REQUEST_URL is set by GitHub Actions when the id-token
     # permission is available.
     - name: Fetch ID token
+      shell: bash
       run: |
         set -x -e
           echo $GITHUB_TOKEN
@@ -49,6 +50,7 @@ runs:
           rm .action-token
     - name: Apply Minder ruletypes
       if: (inputs.project != '' && inputs.directory != '')
+      shell: bash
       env:
         MINDER_GRPC_SERVER_PORT: 443
         MINDER_GRPC_SERVER_HOST: ${{ inputs.server }}
