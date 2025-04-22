@@ -24,7 +24,7 @@ inputs:
   release:
     description: 'The Minder client release to download and use. Defaults to a specific version for each release of the action.'
     required: false
-    default: '0.0.88'
+    default: 'v0.0.88'
 runs:
   using: composite
   steps:
