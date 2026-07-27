@@ -37,7 +37,7 @@ runs:
       uses: sigstore/cosign-installer@v4.1.2
 
     - name: Install and validate CLI
-      uses: mindersec/minder-client-installer@v1.1.0
+      uses: mindersec/minder-client-installer@v1.1.2
       with:
         release: ${{ inputs.release }}
         install-dir: ${{ inputs.install-dir }}
