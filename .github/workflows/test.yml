@@ -22,7 +22,7 @@ jobs:
           mkdir -p dummy_rule_test
           cat << 'STAR' > dummy_rule_test/test.star
           def test_dummy():
-              assert True
+              assert.true(True)
           STAR
 
       - name: Run test action
