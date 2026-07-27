@@ -28,5 +28,5 @@ jobs:
       - name: Run test action
         uses: ./test
         with:
-          minder_version: latest
-          rules_directory: ./dummy_rule_test
+          release: latest
+          rules-directory: ./dummy_rule_test
