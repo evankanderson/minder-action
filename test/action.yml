@@ -28,7 +28,7 @@ outputs:
     description: SHA-256 digest of the JUnit XML result.
     value: ${{ steps.upload-results.outputs.artifact-digest }}
   junit-filename:
-    description: Filesystem path to the JUnixt XML result.
+    description: Filesystem path to the JUnit XML result.
     value: ${{ steps.run-test.outputs.test-results }}
 runs:
   using: "composite"
@@ -49,7 +49,7 @@ runs:
         RULES_DIRECTORY: ${{ inputs.rules-directory }}
       run: |
         echo "Running mindev test..."
-        mindev test -d "$RULES_DIRECTORY" -o junit > test-results.xml
+        mindev test -o junit "$RULES_DIRECTORY" > test-results.xml
         echo "test-results=test-results.xml" >> $GITHUB_OUTPUT
         echo "Test results written to test-results.xml"
 
